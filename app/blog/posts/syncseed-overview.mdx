@@ -1,0 +1,41 @@
+---
+title: 'SyncSeed'
+publishedAt: '2025-06-30'
+summary: 'What is SyncSeed?'
+tags: ['syncseed', 'iot', 'gardening', 'farming', 'arduino', 'raspberry pi', 'mqtt', 'influxdb', 'lora']
+---
+
+## Project Overview
+
+[SyncSeed](https://syncseed.app) is a project I've undertaken to allow users to monitor sensor data, draw insights from that data, set alerts, and perform various actions. As the name implies, this is focused on a gardening or farming context. 
+
+The tech stack includes React for the frontend and an ASP.NET Core backend, both hosted on GCP. Sensor data is collected through Arduinos which communicate via LoRa to a Raspberry Pi gateway. The gateway then sends the data to the backend via MQTT.
+
+The sensor data is stored in a time series database (InfluxDB) for efficient querying and analysis. Other user data is stored in Firebase Firestore.
+
+## Why LoRa?
+
+A project about sensors has to start with what the sensors look like in the field. Because this is a gardening/farming project, the sensors are often placed in remote locations where Wi-Fi or cellular connectivity is unreliable or non-existent. LoRa (Long Range) is a low-power wide-area network (LPWAN) technology that allows devices to communicate over long distances with minimal power consumption. 
+
+This makes it ideal for applications like farming, where sensors may be placed in locations without electricity or internet access.
+
+## Why MQTT?
+
+MQTT (Message Queuing Telemetry Transport) is a lightweight messaging protocol designed for low-bandwidth, high-latency networks. It is well-suited for IoT applications where devices need to send small amounts of data frequently, but may not always have a stable connection.
+
+The way it works is by allowing some devices to publish to a queue and have other devices subscribe to that queue. This decouples the devices from each other, allowing for more flexible communication patterns.
+
+Currently, SyncSeed has a cloud-based MQTT broker where multiple gateways can publish data. This allows for easy scaling and management of multiple sensor networks.
+
+It also works in the reverse direction. The ASP.NET Core server can publish commands to the MQTT broker and the gateways can subscribe to those commands. This allows for remote control of the sensors, such as changing their configuration or triggering actions.
+
+## Why InfluxDB?
+
+InfluxDB is a time series database designed for storing and querying time-stamped data. It is optimized for high write and query loads, making it ideal for applications that require real-time data analysis.
+
+In SyncSeed, InfluxDB is used to store the sensor data collected from the gateways. This allows for efficient querying of historical data, which is essential for analyzing trends and patterns in the sensor readings.
+
+InfluxDB also allows for easy partitioning and downsampling, so users can have fast access to up-to-date data while also being able to query historical data without overwhelming the database. 
+
+
+
